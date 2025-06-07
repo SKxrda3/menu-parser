@@ -330,18 +330,46 @@ mysql_config = {
 }
 
 
-# ocr = PaddleOCR(use_angle_cls=True, lang='en')
+# # ocr = PaddleOCR(use_angle_cls=True, lang='en')
+# ocr = PaddleOCR(
+#     use_angle_cls=False,
+#     lang='en',
+#     enable_mkldnn=False,
+#     use_pdserving=False,
+#     det_model_dir='en_PP-OCRv3_det_infer',
+#     rec_model_dir='en_PP-OCRv3_rec_infer',
+#     show_log=False,
+#     use_tensorrt=False,
+#     drop_score=0.5
+
+# )
+
+
+# Block font downloads completely
+os.environ['PADDLEOCR_FONT_PATH'] = ''
+os.environ['PADDLEOCR_DOWNLOAD_INFERENCE'] = '1'
+
 ocr = PaddleOCR(
-    use_angle_cls=False,
+    # Basic configuration
     lang='en',
+    # Model paths (must exist locally)
+    text_detection_model_dir='en_PP-OCRv3_det_infer',
+    text_recognition_model_dir='en_PP-OCRv3_rec_infer',
+    
+    # Text orientation (replaces use_angle_cls)
+    use_textline_orientation=False,
+    
+    # Score threshold (use drop_score instead of rec_threshold)
+    # drop_score=0.5,
+    
+    # Performance settings
     enable_mkldnn=False,
-    use_pdserving=False,
-    det_model_dir='en_PP-OCRv3_det_infer',
-    rec_model_dir='en_PP-OCRv3_rec_infer',
-    show_log=False,
     use_tensorrt=False,
-    drop_score=0.5
+    
+    # Additional optimization
+    # use_visual_backbone=False  # Reduces memory usage
 )
+
 
 def extract_boxes(image_path, conf_threshold=0.6):
     results = ocr.predict(image_path)
