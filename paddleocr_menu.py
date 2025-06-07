@@ -330,8 +330,14 @@ mysql_config = {
 }
 
 
-ocr = PaddleOCR(use_angle_cls=True, lang='en')
-
+# ocr = PaddleOCR(use_angle_cls=True, lang='en')
+ocr = PaddleOCR(
+    use_angle_cls=False,
+    lang='en',
+    det_model_dir='en_PP-OCRv3_det_infer',
+    rec_model_dir='en_PP-OCRv3_rec_infer',
+    use_gpu=False
+)
 
 def extract_boxes(image_path, conf_threshold=0.6):
     results = ocr.predict(image_path)
